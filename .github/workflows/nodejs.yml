@@ -33,7 +33,7 @@ jobs:
         # Source directory
         SOURCE: # optional, default is 
         # Target directory
-        TARGET: /home/brProject
+        TARGET: /home/dormin/brProject
 
       env:
         CI: true
