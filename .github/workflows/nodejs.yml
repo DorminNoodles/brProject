@@ -23,7 +23,7 @@ jobs:
        CI: true
     - name: ssh deploy
       uses: easingthemes/ssh-deploy@v2.0.8
-      with:
+      env:
         # Private Key
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         # Remote host
