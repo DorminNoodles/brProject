@@ -30,6 +30,7 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         # Remote user
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        SOURCE: readme
         # Target directory
         TARGET: /home/dormin/brProject
         ARGS: "-rltgoDzvO --delete"
