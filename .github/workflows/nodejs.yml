@@ -30,9 +30,5 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         # Remote user
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        # Remote port
-        REMOTE_PORT: # optional, default is 22
-        # Source directory
-        SOURCE: # optional, default is 
         # Target directory
         TARGET: /home/dormin/brProject
