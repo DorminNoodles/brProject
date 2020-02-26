@@ -19,6 +19,8 @@ jobs:
 #     - run: npm install
 #     - run: npm run build --if-present
 #     - run: npm test
+      env:
+       CI: true
     - name: ssh deploy
       uses: easingthemes/ssh-deploy@v2.0.8
       with:
@@ -34,6 +36,3 @@ jobs:
         SOURCE: # optional, default is 
         # Target directory
         TARGET: /home/dormin/brProject
-
-      env:
-        CI: true
