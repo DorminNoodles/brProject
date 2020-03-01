@@ -1,0 +1,23 @@
+{
+  "name": "brproject",
+  "version": "1.0.0",
+  "description": "Hello World",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DorminNoodles/brProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DorminNoodles/brProject/issues"
+  },
+  "homepage": "https://github.com/DorminNoodles/brProject#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
