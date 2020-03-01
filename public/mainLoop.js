@@ -2,6 +2,10 @@ import { Vec2 } from './Vec2.js';
 import { Camera } from './Camera.js';
 import { e_Inputs, g_LocalInput } from './Input.js';
 
+import {socket, sendDataToServer} from './socketIO.js';
+
+let otherPlayers = [];
+
 var g_Canvas = $('#gameCanvas')[0];
 var g_ctx = g_Canvas.getContext('2d');
 
@@ -11,6 +15,7 @@ var g_GameLoopHandle;
 /////////////////////TMP Player//////////////
 class Player{
   constructor(){
+	//   console.log(socket);
 	  this.radius = 5;
 
 	  this.color = "#FF0000";
@@ -103,10 +108,26 @@ class Player{
 
 	  this.pos.x += this.moveDir.x*speed;
 	  this.pos.y += this.moveDir.y*speed;
+
+	  sendDataToServer('updatePosition', {
+		x: this.pos.x,
+		y: this.pos.y
+	});
   }
+
+	displace(pos) {
+		this.pos.x = pos.x;
+		this.pos.y = pos.y;
+  	}
+
 }
 var g_LocalPlayer = new Player();
 
+let playersArray = [];
+
+for (let i = 0; i < 40; i++) {
+	playersArray.push(new Player());
+}
 
 
 //Make Module
@@ -116,7 +137,7 @@ var clientInfo = {
 	tick:0,
 	currTime:0,
 	lastCurrTime:0,
-	tickrate:66,
+	tickrate:30,
 };
 
 $( window ).resize(function() {
@@ -125,8 +146,6 @@ $( window ).resize(function() {
 	g_Canvas.halfWidth = g_Canvas.width >> 1;
 	g_Canvas.halfHeight = g_Canvas.height >> 1;
 });
-
-
 
 window.requestAnimFrame = (function() {
 	return  window.requestAnimationFrame ||
@@ -164,8 +183,17 @@ function gameLoop(){
 	/////////////////////DRAW/////////////////////
 	g_LocalCamera.view();
 
-
 	//Draw Players
+	otherPlayers.forEach((el, index) => {
+		// console.log(el);
+		if (el.x && el.y) {
+			console.log(el);
+			playersArray[index].displace({x: el.x || 0, y: el.y || 0});
+			playersArray[index].draw();
+		}
+	})
+
+	//Draw Player
 	g_LocalPlayer.draw();
 
 	g_ctx.font = '18pt Calibri';
@@ -175,6 +203,12 @@ function gameLoop(){
 
 	clientInfo.lastCurrTime = clientInfo.currTime;
 }
+
+
+/////////////////////SOCKET.IO//////////////////////
+socket.on('positions', (data) => {
+	otherPlayers = data;
+});
 
 $(window).trigger('resize');
 mainLoop();
