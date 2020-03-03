@@ -207,6 +207,7 @@ function gameLoop(){
 
 /////////////////////SOCKET.IO//////////////////////
 socket.on('positions', (data) => {
+	console.log('position from server > ', data);
 	otherPlayers = data;
 });
 
