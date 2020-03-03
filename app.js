@@ -30,6 +30,21 @@ io.on('connection', (socket) => {
             y: 0
         }
     };
+    //emit when login
+    socket.emit('positions', players.map((elem) => {
+      if (elem.id != id) {
+          return {
+              id: elem.id,
+              x: elem.pos.x,
+              y: elem.pos.y
+          }
+      }
+      return null;
+    }));
+
+
+
+
     console.log(id);
     socket.emit('news', { hello: 'world' });
     socket.on('news', function (data) {
