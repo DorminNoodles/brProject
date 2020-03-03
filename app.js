@@ -7,9 +7,9 @@ var io = require('socket.io')(server);
 
 let players = [];
 
-server.use(express.static('public'));
+app.use(express.static('public'));
 
-server.get('/players', function (req, res) {
+app.get('/players', function (req, res) {
   const headers = {
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
