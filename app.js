@@ -51,6 +51,10 @@ io.on('connection', (socket) => {
             return null;
         }));
     });
+    socket.on('disconnect', () => {
+        players[id].pos.x = -9000;
+        players[id].pos.y = -90000;
+    });
   });
 //end
 
