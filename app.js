@@ -7,16 +7,18 @@ var io = require('socket.io')(server);
 
 let players = [];
 
-app.use(express.static('public'));
+server.use(express.static('public'));
 
-app.get('/', function (req, res) {
-  res.sendFile('public/index.html');
-})
-
-app.get('/players', function (req, res) {
-    console.log(players);
-    res.json(JSON.stringify(players));
-  })
+server.get('/players', function (req, res) {
+  const headers = {
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+    "Access-Control-Allow-Credentials": true
+  };
+  console.log(players);
+  res.writeHead(200, headers);
+  res.json(JSON.stringify(players));
+});
 
 //socket io
 io.on('connection', (socket) => {
