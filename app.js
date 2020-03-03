@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
         }
     };
     //emit when login
-    socket.emit('positions', players.map((elem) => {
+    socket.broadcast.emit('positions', players.map((elem) => {
       if (elem.id != id) {
           return {
               id: elem.id,
@@ -41,9 +41,6 @@ io.on('connection', (socket) => {
       }
       return null;
     }));
-
-
-
 
     console.log(id);
     socket.emit('news', { hello: 'world' });
