@@ -22,6 +22,7 @@ app.get('/players', function (req, res) {
 
 //socket io
 io.on('connection', (socket) => {
+    console.log("connexion for > ", socket.id);
     const id = players.length;
     players[id] = {
         id: socket.id,
