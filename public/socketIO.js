@@ -1,7 +1,8 @@
-// console.log(io);
+import * as config from './Config.js';
 
-export const socket = io.connect('http://51.83.44.50:4000');
+export const socket = io.connect(config.ORIGIN_URL);
 
 export const sendDataToServer = (eventName, data) => {
+    // console.log("send to server ==>")
     socket.emit(eventName, data);
 }

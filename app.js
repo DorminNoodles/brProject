@@ -6,7 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 let players = [];
-
+console.log("hey.....");
 app.use(express.static('public'));
 
 app.get('/players', function (req, res) {
@@ -64,11 +64,20 @@ io.on('connection', (socket) => {
             return null;
         }));
     });
-    socket.on('disconnect', () => {
-        players[id].pos.x = -9000;
-        players[id].pos.y = -90000;
+    socket.on('fire', (data) => {
+        console.log(data);
+        socket.broadcast.emit('fire', data);
     });
-  });
+    socket.on('disconnect', () => {
+
+        // players = players.map((player) => {
+        //     console.log(player.id);
+        //     return player.id == socket.id ? player : undefined;
+        // })
+        players[id].pos.x = -9000;
+        players[id].pos.y = -9000;
+    });
+});
 //end
 
 server.listen(process.env.PORT, function () {

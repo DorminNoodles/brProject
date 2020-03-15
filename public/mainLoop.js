@@ -5,6 +5,7 @@ import { e_Inputs, g_LocalInput } from './Input.js';
 import {socket, sendDataToServer} from './socketIO.js';
 
 let otherPlayers = [];
+let fires = [];
 
 var g_Canvas = $('#gameCanvas')[0];
 var g_ctx = g_Canvas.getContext('2d');
@@ -27,6 +28,15 @@ class Player{
 
     this.speed = 5;
     this.fire = false;
+  }
+
+  drawLine(start, target) {
+	let dist = 1000;
+	g_ctx.strokeStyle = "#FF0000";
+	g_ctx.beginPath();
+	g_ctx.moveTo(start.x, start.y);
+	g_ctx.lineTo(start.x + target.x*dist, start.y + target.y*dist);
+	g_ctx.stroke();
   }
 
   draw(){
@@ -66,13 +76,16 @@ class Player{
 	  g_ctx.fillStyle = this.color;
 	  g_ctx.fill();
 
-    if(this.fire){
-      let dist = 1000;
-      g_ctx.strokeStyle = "#FF0000";
-      g_ctx.beginPath();
-      g_ctx.moveTo(this.pos.x, this.pos.y);
-      g_ctx.lineTo(this.pos.x + this.target.x*dist, this.pos.y + this.target.y*dist);
-      g_ctx.stroke();
+    if (this.fire){
+		console.log(fires);
+		sendDataToServer('fire', {
+			startX: this.pos.x,
+			startY: this.pos.y,
+			endX: this.target.x,
+			endY: this.target.y,
+		});
+		this.drawLine(this.pos, this.target);
+		console.log("hey");
     }
 
 	  g_ctx.restore();
@@ -183,14 +196,13 @@ function gameLoop(){
 	/////////////////////DRAW/////////////////////
 	g_LocalCamera.view();
 
-	//Draw Players
+	//Draw Players enemy
+	console.log("other players > ", otherPlayers);
 	otherPlayers.forEach((el, index) => {
-		// console.log(el);
-		if (el.x && el.y) {
-			console.log(el);
-			playersArray[index].displace({x: el.x || 0, y: el.y || 0});
+		// if (el.x && el.y) {
+			playersArray[index].displace({x: el.x || 0.5, y: el.y || 0.5});
 			playersArray[index].draw();
-		}
+		// }
 	})
 
 	//Draw Player
@@ -200,15 +212,37 @@ function gameLoop(){
 	g_ctx.fillStyle = 'white';
 	g_ctx.fillText(Math.round(1000/g_delta), -500, -300);
 
-
 	clientInfo.lastCurrTime = clientInfo.currTime;
+
+	//Draw fires
+	fires = fires.filter(fire => {
+		if (fire.time + 100 < Date.now())
+			return false;
+		return true;
+	}).map(fire => {
+		g_LocalPlayer.drawLine({
+			x: fire.startX,
+			y: fire.startY
+		}, {
+			x: fire.endX,
+			y: fire.endY
+		});
+		return fire;
+	})
 }
 
 
 /////////////////////SOCKET.IO//////////////////////
 socket.on('positions', (data) => {
-	console.log('position from server > ', data);
+	// console.log('position from server > ', data);
 	otherPlayers = data;
+});
+socket.on('fire', (data) => {
+	const time = Date.now();
+	fires.push({
+		time,
+		...data
+	});
 });
 
 $(window).trigger('resize');
